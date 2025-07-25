@@ -2,17 +2,26 @@
   "name": "ebookshoop",
   "version": "1.0.0",
   "description": "This is a eBook api project",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon server.ts"
   },
   "author": "Deepak Singh",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.31.0",
+    "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
+    "eslint": "^9.31.0",
+    "globals": "^16.3.0",
+    "jiti": "^2.5.1",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.38.0"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
   }
 }
