@@ -1,24 +1,25 @@
 import express from "express";
 
 import errorHandler from "./middlewares/errorHandler";
+import userRouter from "./user/userRouter";
 
 
-
-const app = express()
+const app = express();
 
 // routes
 
-// Http methods GET, POST PUT PATCH DELETE
 
 app.get('/', (req, res, next) => {
     
-    res.json({message:"Welcome on eBook"})
-})
+    res.json({message:"Welcome on eBook"});
+});
+
+app.use("/api/v1/users", userRouter);
 
 
-// globle error handler
+// globle errorHandler
 
-app.use(errorHandler)
+app.use(errorHandler);
 
 
-export default app
+export default app;
