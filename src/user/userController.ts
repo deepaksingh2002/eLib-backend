@@ -32,9 +32,12 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 
 
     // Token generation -jwt
-    const token = sign({sub: newUser._id}, config.jwtSecret as string, {expiresIn: '7d'})
+    const token = sign({sub: newUser._id}, config.jwtSecret as string, {
+        expiresIn: '7d',
+        algorithm: "HS256"
+        })
 
-     res.json({id: newUser._id});
+     res.json({ accessToken: token});
 }
 
 export {createUser}
