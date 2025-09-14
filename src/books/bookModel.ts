@@ -1,6 +1,7 @@
 
 import mongoose, { Schema } from "mongoose";
 import { Book } from "./bookTypes";
+//import userModel from "../user/userModel";
 
 
 
@@ -11,8 +12,8 @@ const bookSchema = new Schema<Book>({
     },
     author: {
         type: Schema.Types.ObjectId,
-       // ref: userModel,
-       required: true
+        //ref: userModel,
+        required: true
     },
     coverImage: {
         type: String,
