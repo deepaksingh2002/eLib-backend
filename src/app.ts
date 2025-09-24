@@ -18,7 +18,7 @@ app.get('/', (req, res, next) => {
 });
 
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/books", bookRouter)
+app.use("/api/v1/books", bookRouter);
 
 
 // globle errorHandler
