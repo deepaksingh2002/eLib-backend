@@ -30,6 +30,6 @@ bookRouter.patch("/:bookId",
 
 bookRouter.get("/",listBooks);
 
-
+bookRouter.get("/:bookId", getSingleBook);
 
 export default bookRouter;
