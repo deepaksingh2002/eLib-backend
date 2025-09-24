@@ -37,7 +37,7 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
       resource_type: "raw",
       filename_override: bookFileName,
       folder: "book-pdfs",
-      format: "pdf",
+      format: "pdf"
     });
 
     const _req = req as AuthRequest;
@@ -63,6 +63,8 @@ const createBook = async (req: Request, res: Response, next: NextFunction) => {
     return next(createHttpError(500, "Error while uploading the files"));
   }
 };
+
+//Error: pdf open
 
 const updateBook = async (req: Request, res: Response, next: NextFunction) => {
   const {title, genre} = req.body;
@@ -120,7 +122,7 @@ try {
       resource_type: "raw",
       filename_override: completeFileName,
       folder: "book-pdfs",
-      format: "pdf"
+      format: "pdf",
       
     });
     completeFileName = uploadResultPdf.secure_url;
@@ -132,11 +134,12 @@ try {
   const updatedBook  = await bookModel.findOneAndUpdate(
     {
       _id: bookId,
+
     },{
       title: title,
       genre: genre,
       coverImage: completeCoverImage ? completeCoverImage : book.coverImage,
-      file: completeFileName ? completeFileName : book.file,
+      file: completeFileName? completeFileName : book.file,
     },{new: true}
   );
 
@@ -149,4 +152,22 @@ try {
 }
 
 
-export  {createBook, updateBook};
+const listBooks = async(req: Request, res:Response, next: NextFunction) => {
+  try {
+      const books = await bookModel.find().populate("author", "name");
+      res.json(books)
+    
+  } catch (err) {
+    return next(createHttpError(500, "Error while getting book list."))
+  }
+
+}
+
+
+
+
+
+
+
+
+export  {createBook, updateBook, listBooks, getSingleBook };

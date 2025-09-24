@@ -1,5 +1,5 @@
 import express from "express";
-import {createBook, updateBook} from "./bookController";
+import {createBook, getSingleBook, listBooks, updateBook} from "./bookController";
 import multer from "multer";
 import path from "node:path";
 import authenticte from "../middlewares/authantacte";
@@ -26,5 +26,10 @@ bookRouter.patch("/:bookId",
     {name: 'coverImage',maxCount: 1},
     {name: "file", maxCount: 1},
 ]), updateBook);
+
+
+bookRouter.get("/",listBooks);
+
+
 
 export default bookRouter;
