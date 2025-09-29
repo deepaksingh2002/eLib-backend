@@ -1,20 +1,27 @@
 import express from "express";
-
+import cors from "cors";
 import errorHandler from "./middlewares/errorHandler";
 import userRouter from "./user/userRouter";
 import bookRouter from "./books/bookRouter";
+import { config } from "./config/config";
 
 
 const app = express();
 
 app.use(express.json());
 
-// routes
+app.use(
+    cors({
+        origin: config.frontendDomain,
+    })
+);
 
 
+ // routes
+ 
 app.get('/', (req, res, next) => {
     
-    res.json({message:"Welcome on eBook"});
+    res.json({message: "Welcome on eBook"});
 });
 
 app.use("/api/v1/users", userRouter);

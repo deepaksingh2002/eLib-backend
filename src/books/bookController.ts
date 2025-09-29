@@ -77,47 +77,61 @@ const updateBook = async (req: Request, res: Response, next: NextFunction) => {
 
   const _req = req as AuthRequest;
   if(book.author.toString() !== _req.userId) {
-    return next(createHttpError(403, "Unauthorized access to bookUpdate."))
+    return next(createHttpError(403, "Unauthorized access to bookUpdate."));
   }
 
-
-
-try {
     const files = req.files as {[fieldname: string]: Express.Multer.File[]};
+
     let completeCoverImage = "";
     if(files?.coverImage){
+     try {
       const filename = files.coverImage[0].filename;
-      const coverMimeType = files.coverImage[0].mimetype.split("/").at(-1); 
+      const coverMimeType = files.coverImage[0].mimetype.split("/").at(-1);
+      
+      const coverFileSplits = book.coverImage.split('/');
+      const oldCoverImagePublicId = coverFileSplits.at(-2)+ '/' + coverFileSplits.at(-1)?.split(".").at(-2);
 
-      // send to cloudnary
-      const filePath = path.resolve(
-        __dirname, "../../public/data/uploads", filename
-      );
-  
-      completeCoverImage = filename;
-      const uploadResult = await cloudinary.uploader.upload(filePath, {
-        filename_override: completeCoverImage,
-        folder: "book-covers",
-        format: coverMimeType
-      });
+       // send to cloudnary
+       const filePath = path.resolve(
+         __dirname, "../../public/data/uploads", filename
+       );
+   
+       completeCoverImage = filename;
+       const uploadResult = await cloudinary.uploader.upload(filePath, {
+         filename_override: completeCoverImage,
+         folder: "book-covers",
+         format: coverMimeType
+       });
+ 
+       completeCoverImage = uploadResult.secure_url;
+ 
+       if(oldCoverImagePublicId){
+         try {
+           await cloudinary.uploader.destroy(oldCoverImagePublicId,  { invalidate: true })
+         } catch (err) {
+           return next(createHttpError(500, "Error while deleting old coverImage"))
+         }
+       }
+       await fs.promises.unlink(filePath);
 
-      completeCoverImage = uploadResult.secure_url;
-      await fs.promises.unlink(filePath);
-
+     } catch (err) {
+      return  next(createHttpError(500, "Error while updating coverImage."));
+     }
     }
-
 
     // fileUpdate
 
   let completeFileName = "";
   if (files.file) {
-  
+  try {
     const bookFilePath = path.resolve(
       __dirname, "../../public/data/uploads", files.file[0].filename
     );
 
     const bookFileName = files.file[0].filename;
     completeFileName = bookFileName;
+    const bookFileSplits = book.file.split("/");
+    const oldBookFilePublicId = bookFileSplits.at(-2) + "/" + bookFileSplits.at(-1);
 
    const uploadResultPdf = await cloudinary.uploader.upload(bookFilePath, {
             resource_type: "raw",
@@ -127,10 +141,17 @@ try {
     });
 
     completeFileName = uploadResultPdf.secure_url;
+
+     await cloudinary.uploader.destroy(oldBookFilePublicId, {
+      resource_type: "raw",
+    });
+
     await fs.promises.unlink(bookFilePath);
-
-  }
-
+   
+    
+    } catch (err) {
+    return next(createHttpError(500, 'Error while updating file'));
+  }}
 
   const updatedBook  = await bookModel.findOneAndUpdate(
     {
@@ -143,14 +164,9 @@ try {
       coverImage: completeCoverImage ? completeCoverImage : book.coverImage,
       file: completeFileName? completeFileName : book.file
     },{ new: true}
-  );
+  )
 
   res.status(200).json(updatedBook );
-
-  } catch (err) {
-    return next(createHttpError(500, 'Error while updating coverImage or file'))
-  }
-
 }
 
 
@@ -185,13 +201,15 @@ const getSingleBook = async (req: Request, res: Response, next: NextFunction) =>
 
 const deleteBook= async(req: Request, res: Response, next: NextFunction) =>{
 
-  const bookId= req.params.bookId;
+  const bookId = req.params.bookId;
+
   const book = await bookModel.findOne({_id: bookId});
   if(!book){
-    return next(createHttpError(404, "Book not found"))
+    return next(createHttpError(404, "Book not found"));
   }
 
   const _req = req as AuthRequest;
+  
   if(book.author.toString() !== _req.userId){
     return next(createHttpError(403, "unauthorized access to delete"));
   }
@@ -209,11 +227,11 @@ const deleteBook= async(req: Request, res: Response, next: NextFunction) =>{
     });
     await bookModel.deleteOne({_id: bookId});
   
-    return res.status(204);
+    return res.status(204).json("Book deleted successfully.");
   } catch (err) {
-    return next(createHttpError(500, "Error while deleting the file and coverImage."))
+    return next(createHttpError(500, "Error while deleting the file and coverImage."));
   }
 }
 
 
-export  {createBook, updateBook, listBooks, getSingleBook, deleteBook };
+export {createBook, updateBook, listBooks, getSingleBook, deleteBook };
