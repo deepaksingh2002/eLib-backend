@@ -1,24 +1,21 @@
 import mongoose from "mongoose";
 import { config } from "./config";
 
-const connectDb = async () => {
+const connectDB = async () => {
   try {
-      mongoose.connection.on("connected", () => {
-        console.log("Connected to database successfully")
-      })
+    mongoose.connection.on("connected", () => {
+      console.log("Connected to database successfully");
+    });
 
+    mongoose.connection.on("error", (err) => {
+      console.log("Error in connecting to database.", err);
+    });
 
-      mongoose.connection.on("error", (err) => {
-        console.log("Error in connecting to database.",err)
-      });
-
-      await mongoose.connect(config.databaseUrl as string);
-
+    await mongoose.connect(config.databaseUrl as string);
   } catch (err) {
-    console.error("Failed to connect Database",err)
+    console.error("Failed to connect to database.", err);
     process.exit(1);
   }
-}
+};
 
-
-export default connectDb;
+export default connectDB;
