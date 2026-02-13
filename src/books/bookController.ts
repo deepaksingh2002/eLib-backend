@@ -5,7 +5,7 @@ import cloudinary from "../config/cloudinary";
 import createHttpError from "http-errors";
 import bookModel from "./bookModel";
 import { AuthRequest } from "../middlewares/authantacte";
-import userModel from "../user/userModel";
+import Users from "../user/userModel";
 
 const createBook = async (req: Request, res: Response, next: NextFunction) => {
     const { title, genre, description } = req.body;
@@ -157,20 +157,49 @@ const listBooks = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-const getSingleBook = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+// const getSingleBook = async (
+//     req: Request,
+//     res: Response,
+//     next: NextFunction
+// ) => {
+//     const bookId = req.params.bookId;
+
+//     try {
+//         const book = await bookModel
+//             .findOne({ _id: bookId })
+//             // populate author field
+//             .populate("author", "name");
+//         if (!book) {
+//             return next(createHttpError(404, "Book not found."));
+//         }
+
+//         return res.json(book);
+//     } catch (err) {
+//         return next(createHttpError(500, "Error while getting a book"));
+//     }
+// };
+
+
+const getSingleBook = async (req: Request, res: Response, next: NextFunction) => {
     const bookId = req.params.bookId;
 
     try {
         const book = await bookModel
             .findOne({ _id: bookId })
-            // populate author field
-            .populate("author", "name");
+            .populate("author", "name") as any; // or your Book type with pdfPath
+
         if (!book) {
             return next(createHttpError(404, "Book not found."));
+        }
+
+        if (book.pdfPath && fs.existsSync(path.resolve(__dirname, '..', '..', book.pdfPath))) {
+            const pdfPathFull = path.resolve(__dirname, '..', '..', book.pdfPath);
+            return res
+                .set({
+                    'Content-Type': 'application/pdf',
+                    'Content-Disposition': 'inline; filename="' + (book.title || 'book') + '.pdf"'
+                })
+                .sendFile(pdfPathFull);
         }
 
         return res.json(book);
@@ -178,6 +207,8 @@ const getSingleBook = async (
         return next(createHttpError(500, "Error while getting a book"));
     }
 };
+
+
 
 const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     const bookId = req.params.bookId;
@@ -192,8 +223,6 @@ const deleteBook = async (req: Request, res: Response, next: NextFunction) => {
     if (book.author.toString() !== _req.userId) {
         return next(createHttpError(403, "You can not update others book."));
     }
-    // book-covers/dkzujeho0txi0yrfqjsm
-    // https://res.cloudinary.com/degzfrkse/image/upload/v1712590372/book-covers/u4bt9x7sv0r0cg5cuynm.png
 
     const coverFileSplits = book.coverImage.split("/");
     const coverImagePublicId =
