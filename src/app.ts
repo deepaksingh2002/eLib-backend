@@ -15,9 +15,6 @@ app.use(
         origin: config.frontendDomain,
     })
 );
-
-
- // routes
  
 app.get('/', (req, res, next) => {
     
@@ -26,9 +23,6 @@ app.get('/', (req, res, next) => {
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/books", bookRouter);
-
-
-// globle errorHandler
 
 app.use(errorHandler);
 

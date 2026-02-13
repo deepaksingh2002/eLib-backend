@@ -27,7 +27,6 @@ const bookSchema = new mongoose.Schema<Book>(
         },
         genre: {
             type: String,
-            required: true,
         },
     },
     { timestamps: true }

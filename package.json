@@ -4,8 +4,8 @@
   "description": "This is a eBook api project",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.ts"
+    "start": "node index.js",
+    "dev": "nodemon -r dotenv/config --experimental-json-modules index.js"
   },
   "author": "Deepak Singh",
   "license": "ISC",
