@@ -1,7 +1,7 @@
 {
-  "name": "ebookshoop",
+  "name": "eLib-backend",
   "version": "1.0.0",
-  "description": "This is a eBook api project",
+  "description": "This is a Book Library project backend.",
   "main": "server.ts",
   "scripts": {
     "start": "node index.js",
