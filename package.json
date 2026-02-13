@@ -4,8 +4,8 @@
   "description": "This is a Book Library project backend.",
   "main": "server.ts",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon -r dotenv/config --experimental-json-modules index.js"
+    "start": "node server.ts",
+    "dev": "nodemon -r dotenv/config --experimental-json-modules server.ts"
   },
   "author": "Deepak Singh",
   "license": "ISC",
