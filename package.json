@@ -6,7 +6,7 @@
   "scripts": {
   "dev": "nodemon --exec ts-node src/server.ts",
   "build": "tsc",
-  "start": "node ./dist/src/server.js"
+  "start": "node server.js"
   },
   "author": "Deepak Singh",
   "license": "ISC",
