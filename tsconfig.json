@@ -10,6 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2022"]
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "src/server.js"],
   "exclude": ["node_modules"]
 }

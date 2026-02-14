@@ -2,11 +2,10 @@
   "name": "elibserver",
   "version": "1.0.0",
   "description": "This is a eBook api project",
-  "main": "server.ts",
+  "main": "index.js",
   "scripts": {
-  "dev": "nodemon --exec ts-node src/server.ts",
-  "build": "tsc",
-  "start": "node dist/server.js"
+  "dev": "nodemon --exec ts-node src/index.ts",
+  "start": "node index.js"
   },
   "author": "Deepak Singh",
   "license": "ISC",
