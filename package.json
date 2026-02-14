@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server.ts",
     "build": "tsc --build tsconfig.json",
-    "start": "node dist/server.ts"
+    "start": "node server.ts"
   },
   "author": "Deepak Singh",
   "license": "ISC",
