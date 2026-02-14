@@ -10,7 +10,7 @@ const _config = {
     cloudinaryCloud: process.env.CLOUDINARY_CLOUD,
     cloudinaryApiKey: process.env.CLOUDINARY_API_KEY,
     cloudinarySecret: process.env.CLOUDINARY_API_SECRET,
-    frontendDomain: process.env.FRONTEND_DOMAIN || 'https://congenial-happiness-jjjvpjp69pqq257w9-3000.app.github.dev/login',
+    frontendDomain: process.env.FRONTEND_DOMAIN,
 }
 
 export const config = Object.freeze(_config)
